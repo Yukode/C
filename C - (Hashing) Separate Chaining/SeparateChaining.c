@@ -5,6 +5,10 @@
 #define arrayMax 5
 
 void main();
+void goInsert(char inputName[nameMax], int inputKey);
+void goRemove(char removeName[nameMax]);
+void goDisplay();
+void goSearch(char searchName[nameMax]);
 
 struct node {
 
@@ -66,9 +70,9 @@ void goInsert(char inputName[nameMax], int inputKey) {
                 temp = temp -> link;
             }
             temp -> link = ptr;
-            ptr -> link = NULL;
-
         }
+
+        ptr -> link = NULL;
 
     }
     
@@ -114,10 +118,10 @@ void goRemove(char removeName[nameMax]) {
         connector = array[a];
         finder = array[a];
 
-        while(finder != NULL) {         // 1000, 2000
+        while(finder != NULL) {
 
-            before = finder;            // 1000, 2000
-            finder = finder -> link;    // 2000, 3000
+            before = finder;
+            finder = finder -> link;
 
             if(strcmp(before -> name, removeName) == 0) {
                 indexFound = a;
@@ -125,33 +129,62 @@ void goRemove(char removeName[nameMax]) {
                 goto jumpToThisPart;
             }
 
-            connector = before;         // 1000
+            connector = before;
 
-        }        
+        }      
 
     }
 
     jumpToThisPart: 
     if(removeExists == 1) {
 
-        printf("RUS! - 1\n");
-
-        if(array[indexFound] -> link == NULL && strcmp(array[indexFound] -> name, removeName) == 0) {   // First node (to be removed/deleted).
-            array[indexFound] = NULL;
-        } else if(array[indexFound] -> link != NULL && strcmp(array[indexFound] -> name, removeName) == 0) {
+        if(strcmp(array[indexFound] -> name, removeName) == 0) {
             array[indexFound] = array[indexFound] -> link;
-        } else if(before -> link != NULL) {
-            connector -> link = before -> link;
-        } else if(before -> link == NULL) {
-            connector -> link = NULL;
+        } else {
+            connector -> link = finder;
         }
-        printf("RUS! - 5\n");
         free(before);
-
         printf("[] WORD SUCCESSFULLY REMOVED!\n");
 
     } else {
         printf("[] WORD TO REMOVE NOT FOUND!\n");
+    }
+
+}
+
+void goSearch(char searchName[nameMax]) {
+
+    struct node *searcher;
+    int a = 0;
+    int searchFound = 0;    // 0 = false, 1 = true
+
+    int arrayFound;
+    
+    for(a = 0; a < arrayMax; a++) {
+
+        searcher = array[a];
+
+        while(searcher != NULL) {
+
+            if(strcmp(searcher -> name, searchName) == 0) {
+                arrayFound = a;
+                searchFound = 1;
+                goto jumpToThisPart;
+            }
+
+            searcher = searcher -> link;
+        }
+
+    }
+
+    jumpToThisPart:
+    if(searchFound == 1) {
+        printf("[] WORD TO SEARCH FOUND.\n\n");
+        printf("Array Found: [%d]\n", arrayFound);
+        printf("Name: %s\n", searcher -> name);
+        printf("Key: %d\n", searcher -> key);
+    } else {
+        printf("[] WORD TO SEARCH DOES NOT EXIST.\n");
     }
 
 }
@@ -213,6 +246,19 @@ void main() {
 
                 break;
             case (3):
+
+                printf("---------------------------------------------------\n");
+                printf("                       SEARCH                      \n");
+                printf("---------------------------------------------------\n");
+
+                char searchName[nameMax];
+                
+                printf("Enter Name: ");
+                fgets(searchName, nameMax, stdin);
+                searchName[strcspn(searchName, "\n")] = '\0';
+
+                goSearch(searchName);
+
                 break;
             case (4):
 
